@@ -23,7 +23,7 @@ class Taxis(Base):
     __tablename__ = 'taxis'
 
     id = Column(Integer, primary_key=True)
-    plate = Column(String, nullable=False, unique=True)
+    plate = Column(String, nullable=False)
 
     def __str__(self):
         return f'Trajectory ID: {self.plate}'
@@ -43,6 +43,8 @@ class Trajectories(Base):
 
 Session = sessionmaker(engine)
 session = Session()
+
+# flask para hacer solicitudes HTTP
 
 if __name__ == '__main__':
     try:
