@@ -15,6 +15,15 @@ class Taxis(db.Base):
     id = Column(Integer, primary_key=True)
     plate = Column(String, nullable=False)
 
+    def to_dict(self):
+        """
+        Funcion para convertir los registros de la tabla en objetos
+        """
+        return {
+            'id': self.id,
+            'plate': self.plate
+        }
+
     def __str__(self):
         return f'Trajectory ID: {self.plate}'
 
@@ -27,6 +36,15 @@ class Trajectories(db.Base):
     date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     latitude = Column(Float)
     longitude = Column(Float)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'taxi_id': self.taxi_id,
+            'date': self.date,
+            'latitude': self.latitude,
+            'longitude': self.longitude
+        }
 
     def __str__(self):
         return f'Taxi ID: {self.taxi_id}'

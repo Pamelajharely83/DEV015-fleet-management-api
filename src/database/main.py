@@ -2,7 +2,7 @@
 
 """
 from src.database import db
-from src.database.models import Taxis, Trajectories
+# from src.database.models import Taxis, Trajectories
 
 if __name__ == '__main__':
     try:
