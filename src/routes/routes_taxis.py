@@ -33,8 +33,8 @@ def fetch_taxis():
     taxis_query_parameters = {
         'id': request.args.get('id', None, type=int),
         'plate': request.args.get('plate'),
-        'page': request.args.get('page', None, type=int),
-        'limit': request.args.get('limit', None, type=int)
+        'page': request.args.get('page', 1, type=int),
+        'limit': request.args.get('limit', 10, type=int)
     }
     #? PARA OBTENER LISTADO DE TAXIS POR ID
     if taxis_query_parameters['id']:
@@ -71,14 +71,7 @@ def fetch_taxis():
 
     # si existe page pero no limit debería arrojar un error mencionando que no se mencionó el límite
     if taxis_query_parameters['page'] and taxis_query_parameters['limit'] is None:
-        return {'error': f'No se especificó la cantidad de elementos a mostrar (limit={taxis_query_parameters["limit"]})'}, 404
+        return {'error': f'No se especificó la cantidad de elementos a mostrar (limit={None})'}, 404
+    
     # si no existe valor en page ni limit debe retornar todos los taxis
-
-    #? Colocando el limite
-    # taxis_per_page = []
-    # if taxis_query_parameters['limit']:
-    #     for i, taxi_per_page in enumerate(taxis_dict):
-    #         if i < taxis_query_parameters['limit']:
-    #             taxis_per_page.append(taxi_per_page)
-    #     return jsonify(taxis_per_page)
-    return jsonify(taxis_dict)
+    #return jsonify(taxis_dict)
