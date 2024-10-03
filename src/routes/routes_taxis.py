@@ -31,47 +31,29 @@ def fetch_taxis():
     taxis_dict = [taxi.to_dict() for taxi in db_taxis.all()]
 
     taxis_query_parameters = {
-        'id': request.args.get('id', None, type=int),
+        'id': request.args.get('id'),
         'plate': request.args.get('plate'),
         'page': request.args.get('page', 1, type=int),
         'limit': request.args.get('limit', 10, type=int)
     }
+
     #? PARA OBTENER LISTADO DE TAXIS POR ID
     if taxis_query_parameters['id']:
-        taxi_item_by_id = next((
-                            taxi for taxi in taxis_dict
-                            if taxi['id'] == taxis_query_parameters['id'])
-                            , None)
-        if taxi_item_by_id:
-            return jsonify(taxi_item_by_id)
-        return {'error': f'Taxi con id "{taxis_query_parameters['id']}" no encontrado'}, 404
+        taxis_by_id = [taxi for taxi in taxis_dict if str(taxis_query_parameters['id']) in str(taxi['id'])]
+        if taxis_by_id:
+            return jsonify(taxis_by_id)
+        return {'error': f'Taxi(s) con id "{str(taxis_query_parameters['id'])}" no encontrado(s)'}, 404
 
     #? PARA OBTENER LISTADO DE TAXIS POR PLACA:
     if taxis_query_parameters['plate']:
-        taxi_item = next((
-                    taxi for taxi in taxis_dict
-                    if taxi['plate'] == taxis_query_parameters['plate']),
-                    None)
-        if taxi_item:
-            return jsonify(taxi_item)
+        taxis_by_plate = [taxi for taxi in taxis_dict if taxis_query_parameters['plate'].lower() in taxi['plate'].lower()]
+        if taxis_by_plate:
+            return jsonify(taxis_by_plate)
         return {'error': f'Taxi con placa "{taxis_query_parameters["plate"]}" no encontrado'}, 404
 
     #? PARA OBTENER LISTADO DE TAXIS POR PÁGINA Y LIMITE:
-    if taxis_query_parameters['page'] and taxis_query_parameters['limit']:
+    if taxis_query_parameters['id'] is None and taxis_query_parameters['plate'] is None:
         offset_value_taxis = db_taxis.offset((taxis_query_parameters['page'] - 1) * taxis_query_parameters['limit'])
         limit_taxis = offset_value_taxis.limit(taxis_query_parameters['limit']).all()
         taxis_per_page = [taxi_per_page.to_dict() for taxi_per_page in limit_taxis]
         return jsonify(taxis_per_page)
-
-    # si limit tiene un valor pero no page entonces debe retornar la cantidad de taxis por limite
-    if taxis_query_parameters['limit'] and taxis_query_parameters['page'] is None:
-        taxis_limit = db_taxis.limit(taxis_query_parameters['limit']).all()
-        taxis_per_limit = [taxi_per_limit.to_dict() for taxi_per_limit in taxis_limit]
-        return jsonify(taxis_per_limit)
-
-    # si existe page pero no limit debería arrojar un error mencionando que no se mencionó el límite
-    if taxis_query_parameters['page'] and taxis_query_parameters['limit'] is None:
-        return {'error': f'No se especificó la cantidad de elementos a mostrar (limit={None})'}, 404
-    
-    # si no existe valor en page ni limit debe retornar todos los taxis
-    #return jsonify(taxis_dict)
