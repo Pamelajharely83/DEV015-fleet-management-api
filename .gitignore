@@ -1,3 +1,6 @@
+venv/
 __pycache__
 .vercel
 .env
+*.py[code]
+.pytest_cache/
