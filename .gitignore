@@ -4,3 +4,4 @@ __pycache__
 .env
 *.py[code]
 .pytest_cache/
+node_modules/
