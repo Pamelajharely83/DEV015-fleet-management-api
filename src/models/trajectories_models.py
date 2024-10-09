@@ -5,9 +5,9 @@ Incluye:
 """
 from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, DateTime, Float, ForeignKey
-from src.database import db
+from src.database.db import db
 
-class Trajectories(db.Base):
+class Trajectories(db.Model):
     """ Modelo de tabla para las trayectorias """
     __tablename__ = 'trajectories'
 

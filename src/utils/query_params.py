@@ -12,8 +12,8 @@ def get_taxi_query_params_for_paging():
     parametros de consulta para paginación
     """
     return {
-        'page': request.args.get('page', 1, type=int),
-        'limit': request.args.get('limit', 10, type=int)
+        'page': request.args.get('page', 1),
+        'limit': request.args.get('limit', 10)
     }
 
 def get_taxi_query_params_for_filter():
