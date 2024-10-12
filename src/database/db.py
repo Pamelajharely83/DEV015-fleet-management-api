@@ -27,7 +27,7 @@ def create_tables():
         # Base.metadata.create_all(engine)
         db.create_all()
         print('Tablas creadas con éxito')
-    except* Exception as e:
+    except Exception as e:
         print(f'Error al crear las tablas {e}')
 
 def delete_tables():
@@ -36,7 +36,7 @@ def delete_tables():
         # Base.metadata.drop_all(engine)
         db.drop_all()
         print('Tablas eliminadas con éxito')
-    except* Exception as e:
+    except Exception as e:
         print(f'Error al eliminar las tablas {e}')
 
 if __name__ == '__main__':
