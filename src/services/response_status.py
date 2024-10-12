@@ -1,21 +1,20 @@
 """ Este modulo contiene las funciones para el manejo de estados de respuesta """
 from flask import jsonify, abort
 
-def handle_list_response(result, dict_converter, message_error, error_code=404):
+def handle_list_response(result, message_error, error_code=404):
     """
     Verifica si la operación ha devuelto resultados
     En caso de que sí, devuelve las instancias convertidas en objetos en formato JSON
     Si no, devuelve un mensaje de error personalizado
     
     Argumento(s):
-    - result: Lista de instancias devueltas por una operación
-    - dict_converter: Función que convierte cada instancia en un diccionario
+    - result: Lista devuelta por una operación
     - message_error: Mensaje para describir el error
     - error_code: Código de error a mostrar (por defecto, 404)
     """
     if not result:
         return {'error': message_error}, error_code
-    return jsonify([dict_converter(item) for item in result]), 200
+    return jsonify(result), 200
 
 def validate_paging_param(query_param, error_code=400):
     """
