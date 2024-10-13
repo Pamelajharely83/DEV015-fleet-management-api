@@ -23,7 +23,7 @@ class Trajectories(db.Model):
         """
         return {
             'id': self.id,
-            'taxi_id': self.taxi_id,
+            'taxiId': self.taxi_id,
             'date': self.date,
             'latitude': self.latitude,
             'longitude': self.longitude

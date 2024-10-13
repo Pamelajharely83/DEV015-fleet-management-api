@@ -4,6 +4,7 @@ para obtener una lista de elementos
 de la base de datos 
 """
 from sqlalchemy import select, cast, String
+from flask import abort, request
 
 def filter_set(item_list, key, search_value):
     """
@@ -16,7 +17,7 @@ def filter_set(item_list, key, search_value):
     - search_value: Valor buscado
     """
     def iterator_func(x):
-        if search_value in str(x[key]):
+        if str(search_value) in str(x[key]):
             return True
         return False
     return list(filter(iterator_func, item_list))
@@ -38,18 +39,28 @@ def filter_by_query_param(database, model, column, query_param, dict_converter):
 
     return [dict_converter(item) for item in query_execution.all()]
 
-def paginate_data(model, query_page, query_limit, filter_query_params):
+def paginate_data(model, query_page, page_default, query_limit, limit_default, filter_query_params):
     """
     Verifica que no existan parametros de filtrado activos y
     retorna los elementos paginados.
 
     Argumento(s):
     - model: Modelo de tabla
-    - query_page: Número de página
-    - query_limit: Número limite de consultas a mostrar por página
+    - query_page: Nombre del párametro de consulta para la página
+    - page_default: Valor por defecto para el número de página
+    - query_limit: Nombre del párametro de consulta para el limite de elementos a mostrar
+    - limit_default: Valor por defecto para el número limite
     - filter_query_params: Diccionario con los parámetros de filtrado
     """
+
+    page = request.args.get(query_page, page_default)
+    limit = request.args.get(query_limit, limit_default)
+
+    if not str(page).isdigit() or not str(limit).isdigit():
+        invalid_value = page if not str(page).isdigit() else limit
+        abort(400, description= f'Valor ingresado "{invalid_value}" no válido, por favor ingresar un valor numérico')
+
     if all(value is None for value in filter_query_params.values()):
-        paginated_data = model.query.paginate(page=query_page, per_page=query_limit)
+        paginated_data = model.query.paginate(page=int(page), per_page=int(limit))
         return paginated_data.items
     return None
