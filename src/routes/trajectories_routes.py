@@ -24,15 +24,21 @@ def fetch_trajectories():
     params_for_filter = get_trajectory_query_params_for_filter()
     paginated_trajectories = paginate_data(Trajectories, 'page', 1, 'limit', 10, params_for_filter)
 
+    try:
+        datetime.strptime(params_for_filter['date'], '%d-%m-%Y')
+    except ValueError:
+        return handle_list_response(None, 'Formato de fecha no válido', 400)
+
     if not params_for_filter['taxiId']:
         return handle_list_response(None, 'Parametro "taxiId" no encontrado', 400)
     filtered_trajectories_by_taxiid = filter_by_query_param(db, Trajectories, Trajectories.taxi_id,
     params_for_filter['taxiId'], Trajectories.to_dict)
-    
+
     if not params_for_filter['date']:
         return handle_list_response(None, 'Parametro "date" no encontrado', 400)
+
     filtered_trajectories_by_date = filter_by_query_param(db, Trajectories, Trajectories.date,
-    datetime.strptime(str(params_for_filter['date']), '%d-%m-%Y').strftime("%Y-%m-%d"), Trajectories.to_dict)
+    datetime.strptime(params_for_filter['date'], '%d-%m-%Y').strftime("%Y-%m-%d"), Trajectories.to_dict)
 
     if params_for_filter['taxiId'] and params_for_filter['date']:
         if filtered_trajectories_by_taxiid:
