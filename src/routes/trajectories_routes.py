@@ -22,12 +22,17 @@ def fetch_trajectories():
     """
 
     params_for_filter = get_trajectory_query_params_for_filter()
-    paginated_trajectories = paginate_data(Trajectories, 'page', 1, 'limit', 10, params_for_filter)
+    
+    if all(value is None for value in params_for_filter.values()):
+        paginated_trajectories = paginate_data(Trajectories, 'page', 1, 'limit', 10)
+        return handle_list_response([Trajectories.to_dict(item) for item in paginated_trajectories],
+        'Error al obtener la lista', 404)
 
-    try:
-        datetime.strptime(params_for_filter['date'], '%d-%m-%Y')
-    except ValueError:
-        return handle_list_response(None, 'Formato de fecha no válido', 400)
+    if params_for_filter['date']:
+        try:
+            datetime.strptime(params_for_filter['date'], '%d-%m-%Y')
+        except ValueError:
+            return handle_list_response(None, 'Formato de fecha no válido', 400)
 
     if not params_for_filter['taxiId']:
         return handle_list_response(None, 'Parametro "taxiId" no encontrado', 400)
@@ -36,7 +41,6 @@ def fetch_trajectories():
 
     if not params_for_filter['date']:
         return handle_list_response(None, 'Parametro "date" no encontrado', 400)
-
     filtered_trajectories_by_date = filter_by_query_param(db, Trajectories, Trajectories.date,
     datetime.strptime(params_for_filter['date'], '%d-%m-%Y').strftime("%Y-%m-%d"), Trajectories.to_dict)
 
@@ -51,5 +55,4 @@ def fetch_trajectories():
             return handle_list_response(trajectories_by_date,
             f'Taxi(s) con fecha "{str(params_for_filter["date"])}" y id "{str(params_for_filter['taxiId'])}" no encontrado(s)')
 
-    return handle_list_response([Trajectories.to_dict(item) for item in paginated_trajectories],
-    'Error al obtener la lista', 404)
+    return None

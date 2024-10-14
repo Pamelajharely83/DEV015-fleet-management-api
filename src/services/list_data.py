@@ -39,7 +39,7 @@ def filter_by_query_param(database, model, column, query_param, dict_converter):
 
     return [dict_converter(item) for item in query_execution.all()]
 
-def paginate_data(model, query_page, page_default, query_limit, limit_default, filter_query_params):
+def paginate_data(model, query_page, page_default, query_limit, limit_default):
     """
     Verifica que no existan parametros de filtrado activos y
     retorna los elementos paginados.
@@ -60,7 +60,5 @@ def paginate_data(model, query_page, page_default, query_limit, limit_default, f
         invalid_value = page if not str(page).isdigit() else limit
         abort(400, description= f'Valor ingresado "{invalid_value}" no válido, por favor ingresar un valor numérico')
 
-    if all(value is None for value in filter_query_params.values()):
-        paginated_data = model.query.paginate(page=int(page), per_page=int(limit))
-        return paginated_data.items
-    return None
+    paginated_data = model.query.paginate(page=int(page), per_page=int(limit))
+    return paginated_data.items

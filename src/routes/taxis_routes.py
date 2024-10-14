@@ -19,7 +19,11 @@ def fetch_taxis():
     """
 
     params_for_filter = get_taxi_query_params_for_filter()
-    paginated_taxis = paginate_data(Taxis, 'page', 1, 'limit', 10, params_for_filter)
+
+    if all(value is None for value in params_for_filter.values()):
+        paginated_taxis = paginate_data(Taxis, 'page', 1, 'limit', 10)
+        return handle_list_response([Taxis.to_dict(item) for item in paginated_taxis],
+        'Error al obtener la lista', 404)
 
     if params_for_filter['plate']:
         filtered_taxis_by_plate = filter_by_query_param(db, Taxis, Taxis.plate,
