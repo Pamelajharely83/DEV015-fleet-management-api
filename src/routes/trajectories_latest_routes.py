@@ -17,24 +17,11 @@ def fetch_latest_trajectories():
     t1 = aliased(Trajectories)
     t2 = aliased(Taxis)
 
-    # sub_query_trajectories = (
-    #     select(t1.taxi_id, func.max(t1.date).label('lastest_date'))
-    #     .group_by(t1.taxi_id)
-    #     .alias('latest_trajectories')
-    # )
     sub_query_taxis = (
         select(t2)
         .alias('taxis_alias')
     )
 
-    # query_trajectories = (
-    #     select(t1.taxi_id, t1.date, t1.latitude, t1.longitude, t2.plate)
-    #     .distinct(t1.taxi_id)
-    #     .join(sub_query_trajectories, (t1.taxi_id == sub_query_trajectories.c.taxi_id) & (t1.date == sub_query_trajectories.c.lastest_date))
-    #     .join(sub_query_taxis, t1.taxi_id == sub_query_taxis.c.id)
-    #     .order_by(t1.taxi_id, t1.date.desc())
-    #     # .group_by(t1.taxi_id, t1.date, t1.latitude, t1.longitude, t2.plate)
-    # )
     query_trajectories = (
         select(t1.taxi_id, t1.date, t1.latitude, t1.longitude, t2.plate)
         .distinct(t1.taxi_id)
