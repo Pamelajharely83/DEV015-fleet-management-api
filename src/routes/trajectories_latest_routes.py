@@ -1,7 +1,7 @@
 """ 
 Este modulo contiene la ruta a /trajectories/latest y sus configuraciones
 """
-from sqlalchemy import select, join
+from sqlalchemy import select
 from sqlalchemy.orm import aliased
 from flask import jsonify
 from src.routes.trajectories_routes import trajectories_routes
@@ -35,7 +35,7 @@ def fetch_latest_trajectories():
     execute_query = db.session.execute(query_trajectories).all()
 
     latest_trajectories = [
-        {'taxiId': item.taxi_id, 'date': item.date, 'latitude': item.latitude, 'longitude': item.longitude, 'plate': item.plate}
+        {'taxiId': item.taxi_id, 'timestamp': item.date, 'latitude': item.latitude, 'longitude': item.longitude, 'plate': item.plate}
         for item in execute_query
     ]
 
