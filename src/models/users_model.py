@@ -1,16 +1,16 @@
 """ 
-Este módulo define el módelo de la tabla para los taxis
+Este módulo define el módelo de la tabla para los usuarios
 """
-
 from sqlalchemy import Column, Integer, String
 from src.database.db import db
 
-class Taxis(db.Model):
-    """ Modelo de tabla para los taxis """
-    __tablename__ = 'taxis'
+class Users(db.Model):
+    """ Modelo de tabla para los usuarios """
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    plate = Column(String, nullable=False)
+    name = Column(String)
+    email = Column(String)
 
     def to_dict(self):
         """
@@ -18,8 +18,9 @@ class Taxis(db.Model):
         """
         return {
             'id': self.id,
-            'plate': self.plate
+            'name': self.name,
+            'email': self.email
         }
 
     def __str__(self):
-        return f'Taxi ID: {self.plate}'
+        return f'Name: {self.name}'

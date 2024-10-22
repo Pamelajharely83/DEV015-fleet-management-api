@@ -1,7 +1,5 @@
 """ 
-Este módulo define las tablas de la base de datos para el sistema de gestión de flotas.
-Incluye:
-- Módelo de tabla para las trayectorias
+Este módulo define el módelo de la tabla para las trayectorias
 """
 from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, DateTime, Float, ForeignKey
