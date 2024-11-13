@@ -4,7 +4,7 @@ para obtener una lista de elementos
 de la base de datos 
 """
 from sqlalchemy import select, cast, String
-from flask import abort, request
+from flask import abort, request, jsonify
 
 def filter_set(item_list, key, search_value):
     """
